@@ -25,15 +25,28 @@ class UsersController < ApplicationController
       render json: @user, status: :ok
     else
       render json: { errors: @user.errors.full_messages },status: :unprocessable_entity
+
+    before_action :authorize_request, except: :create
+    before_action :find_user, except: %i[create index]
+  
+    def index
+      @users = User.all
+      render json: @users, status: :ok, Serializer: UserSerializer
+    end
+  
+    def show
+      render json: @user, status: :ok, Serializer: UserSerializer
+
     end
   end
   
   def destroy
     @user.destroy
   end
-  
+
   private
   
+
   def find_user
     @user = User.find_by_username!(params[:_username])
     rescue ActiveRecord::RecordNotFound
@@ -43,4 +56,5 @@ class UsersController < ApplicationController
   def user_params
     params.permit(:name, :username, :email, :password, :password_confirmation, :role)
   end
+end
 end

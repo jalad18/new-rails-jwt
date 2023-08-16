@@ -1,6 +1,6 @@
 class NewsController < ApplicationController
   before_action :authorize_request 
-  before_action :find_news, only: [:show, :edit, :update]
+  before_action :find_news, only: [:show, :edit, :update,:destroy]
   
   def index
     @news = News.all
